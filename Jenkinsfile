@@ -3,7 +3,7 @@ pipeline {
         label "jenkins_agent"
     }
     tools {
-        maven 'my-maven-3'
+        maven 'maven-path'
     }
     stages {
         stage('Checkout') {
