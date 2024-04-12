@@ -46,7 +46,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker pull sneproject/maven-app'
-                sh 'docker run -d -p 80:80 sneproject/maven-app'
+                sh 'docker-compose -f docker-compose.yaml up -d'
             }
         }
     }
