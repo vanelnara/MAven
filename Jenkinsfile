@@ -26,30 +26,29 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube_Server') {
                     sh '''
-                        mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=Maven-project \
-                        -Dsonar.projectName='Maven-project' \
-                        -Dsonar.host.url=http://10.1.1.210:9000 \
-                        -Dsonar.login=sqp_574a3d28a7b25f17dbeb754813bc48db05aeb26f
+                        sonar-scanner \
+                         -Dsonar.projectKey=Maven-project \
+                         -Dsonar.sources=. \
+                         -Dsonar.host.url=http://10.1.1.210:9000
                     '''
                 }
             }
         }
         stage('Docker Build and Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'sneproject', passwordVariable: 'bonjourvanel')]) {
                     sh '''
-                        docker build -t $DOCKER_USERNAME/maven-app .
-                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                        docker push $DOCKER_USERNAME/maven-app
+                        docker build -t sneproject/maven-app .
+                        docker login -u sneproject -p bonjourvanel
+                        docker push sneproject/maven-app
                     '''
                 }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker pull $DOCKER_USERNAME/maven-app'
-                sh 'docker run -d -p 8080:8080 $DOCKER_USERNAME/maven-app'
+                sh 'docker pull sneproject/maven-app'
+                sh 'docker run -d -p 5000:5000 sneproject/maven-app'
             }
         }
     }
