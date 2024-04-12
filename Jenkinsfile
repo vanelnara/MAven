@@ -27,7 +27,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner'
                     withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
-                        sh "sonar-scanner -Dsonar.host.url=http://10.1.1.210:9000 -Dsonar.login=admin -Dsonar.password=vanelnara"
+                        sh "sonar-scanner -Dsonar.host.url=http://10.1.1.210:9000 -Dsonar.login=admin -Dsonar.password=vanelnara -Dsonar.java.binaries=target/classes"
                     }
                 }
             }
