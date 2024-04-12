@@ -179,15 +179,7 @@
                 </configuration>
             </plugin>
 		<!-- CODE COVERAGE -->
- 	
-                            <plugins>
-                               <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
-            </plugin>
-            <!-- Your existing plugins -->
-            <plugin>
+ 		    <plugin>
  		        <groupId>org.jacoco</groupId>
  		        <artifactId>jacoco-maven-plugin</artifactId>
  		        <version>0.8.4</version>
