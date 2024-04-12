@@ -22,18 +22,13 @@ pipeline {
                 sh 'mvn verify'
             }
         }
+        
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube_Server') {
-                    sh '''
-                        sonar-scanner \
-                         -Dsonar.projectKey=Maven-project \
-                         -Dsonar.sources=. \
-                         -Dsonar.host.url=http://10.1.1.210:9000
-                    '''
-                }
-            }
-        }
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
+    }
+  }
         stage('Docker Build and Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'sneproject', passwordVariable: 'bonjourvanel')]) {
