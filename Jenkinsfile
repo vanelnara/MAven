@@ -22,13 +22,16 @@ pipeline {
                 sh 'mvn verify'
             }
         }
-        
         stage('SonarQube Analysis') {
-    def scannerHome = tool 'SonarScanner';
-    withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"
-    }
-  }
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
         stage('Docker Build and Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'sneproject', passwordVariable: 'bonjourvanel')]) {
