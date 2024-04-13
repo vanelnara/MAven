@@ -23,7 +23,7 @@ WORKDIR /usr/local/tomcat/webapps
 COPY --from=build /app/target/*.war .
 
 # Expose the port the Tomcat server runs on
-EXPOSE 5000
+EXPOSE 8080
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
