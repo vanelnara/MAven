@@ -32,11 +32,22 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build and Push') {
+        stage('Build') {
+            steps {
+               sh 'mvn install -DskipTests'
+            } 
+
+            post {
+               success {
+                   echo 'Now Archiving it...'
+                   archiveArtifacts artifacts: '**/target/*.war'
+               }
+            }
+        }
+        stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'sneproject', passwordVariable: 'bonjourvanel')]) {
                     sh '''
-                        docker build -t sneproject/maven-app .
                         docker login -u sneproject -p bonjourvanel
                         docker push sneproject/maven-app
                     '''
