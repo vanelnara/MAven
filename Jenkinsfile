@@ -24,11 +24,8 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    def scannerHome = tool 'SonarScanner'
-                    withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
-                        sh "sonar-scanner -Dsonar.host.url=http://10.1.1.210:9000 -Dsonar.login=admin -Dsonar.password=vanelnara -Dsonar.java.binaries=src/main/java/com/visualpathit/account"
-                    }
+                withSonarQubeEnv('SonarScanner') {
+                    sh "mvn sonar:sonar -Dsonar.host.url=http://10.1.1.210:9000 -Dsonar.login=admin -Dsonar.password=vanelnara -Dsonar.java.binaries=src/main/java/com/visualpathit/account"
                 }
             }
         }
