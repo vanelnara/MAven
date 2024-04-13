@@ -23,7 +23,7 @@ RUN addgroup -S myappgroup && adduser -S myappuser -G myappgroup
 WORKDIR /app
 
 # Copy the built application JAR file from the build stage to the container at /app
-COPY --from=build /Maven_lab/target/*.jar app.jar
+COPY --from=build /Maven_lab/target/MAven-*.jar 
 
 # Change the owner of the app directory to the non-root user
 RUN chown myappuser:myappgroup /app -R
@@ -35,4 +35,4 @@ EXPOSE 8080
 USER myappuser
 
 # Run the application
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "MAven-*.jar"]
