@@ -4,6 +4,8 @@ pipeline {
     }
     tools {
         maven 'maven-path'
+        // Define SonarQube installation
+        sonarQubeScanner 'sonar-server'
     }
     stages {
         stage('Checkout') {
@@ -24,8 +26,12 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarScanner') {
-                    sh "mvn sonar:sonar -Dsonar.host.url=http://10.1.1.210:9000 -Dsonar.login=admin -Dsonar.password=vanelnara -Dsonar.java.binaries=src/main/java/com/visualpathit/account"
+                script {
+                    // Use the defined SonarQube installation
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv("sonar-server") {
+                        sh "mvn sonar:sonar"
+                    }
                 }
             }
         }
