@@ -4,8 +4,6 @@ pipeline {
     }
     tools {
         maven 'maven-path'
-        // Define SonarQube installation
-        sonarQubeScanner 'sonar-server'
     }
     stages {
         stage('Checkout') {
@@ -27,15 +25,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Use the defined SonarQube installation
-                    def scannerHome = tool 'SonarScanner'
+                    // Use the 'withSonarQubeEnv' wrapper directly
                     withSonarQubeEnv("sonar-server") {
                         sh "mvn sonar:sonar"
                     }
                 }
             }
         }
-        stage("Quality Gate") {
+         stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
