@@ -24,15 +24,13 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Use the 'withSonarQubeEnv' wrapper directly
-                    withSonarQubeEnv("sonar-server") {
-                        sh "mvn sonar:sonar"
-                    }
+                // Use the withSonarQubeEnv wrapper to configure SonarQube analysis
+                withSonarQubeEnv('sonar-server') {
+                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=vanelnara'
                 }
             }
         }
-         stage("Quality Gate") {
+        stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
