@@ -30,25 +30,29 @@ pipeline {
                 }
             }
         }
-        
         stage("Quality Gate") {
-           timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-          def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-          if (qg.status != 'OK') {
-          error "Pipeline aborted due to quality gate failure: ${qg.status}"
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Just in case something goes wrong, pipeline will be killed after a timeout
+                    script {
+                        def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
         }
-     } 
-  }
         stage('Build') {
             steps {
-               sh 'mvn install -DskipTests'
+                sh 'mvn install -DskipTests'
             } 
 
             post {
-               success {
-                   echo 'Now Archiving it...'
-                   archiveArtifacts artifacts: '**/target/*.war'
-               }
+                success {
+                    echo 'Now Archiving it...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
             }
         }
         stage('Docker Push') {
