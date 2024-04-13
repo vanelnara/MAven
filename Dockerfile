@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the artifact from the target directory into the container
-COPY target/*.war /app/app.war
+COPY **/target/*.war /app/app.war
 
 # Expose the port your application listens on
 EXPOSE 8080
