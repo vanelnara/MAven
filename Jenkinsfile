@@ -47,6 +47,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'sneproject', passwordVariable: 'bonjourvanel')]) {
                     sh '''
+                        docker build -t sneproject/maven-app . 
                         docker login -u sneproject -p bonjourvanel
                         docker push sneproject/maven-app
                     '''
