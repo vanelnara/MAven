@@ -8,7 +8,7 @@ WORKDIR /app
 COPY pom.xml .
 
 # Copy the rest of the application files to the container at /app
-COPY src ./Maven_lab
+COPY src ./Maven_lab/src
 
 # Build the application with Maven
 RUN mvn clean package
