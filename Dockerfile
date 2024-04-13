@@ -16,14 +16,23 @@ RUN mvn clean package
 # Use an official Tomcat image as a base image
 FROM tomcat:9.0-jdk17-openjdk-slim
 
+# Create a non-root user
+RUN addgroup -S myappgroup && adduser -S myappuser -G myappgroup
+
 # Set the working directory in the container
 WORKDIR /usr/local/tomcat/webapps
 
 # Copy the war file from the build stage to the webapps directory of Tomcat
 COPY --from=build /app/target/*.war .
 
+# Change the owner of the app directory to the non-root user
+RUN chown myappuser:myappgroup /app -R
+
 # Expose the port the Tomcat server runs on
 EXPOSE 8080
+
+# Switch to the non-root user
+USER myappuser
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
