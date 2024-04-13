@@ -23,7 +23,7 @@ RUN addgroup --system myappgroup && adduser --system myappuser -G myappgroup
 WORKDIR /usr/local/tomcat/webapps
 
 # Copy the war file from the build stage to the webapps directory of Tomcat
-COPY **/target/*.war /app/app.war .
+COPY --from=build /app/target/*.war .
 
 # Expose the port the Tomcat server runs on
 EXPOSE 8080
