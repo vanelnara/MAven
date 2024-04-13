@@ -8,31 +8,31 @@ WORKDIR /app
 COPY pom.xml .
 
 # Copy the rest of the application files to the container at /app
-COPY src ./src
+COPY src ./Maven_lab
 
 # Build the application with Maven
 RUN mvn clean package
 
-# Use an official Tomcat image as a base image
-FROM tomcat:9.0-jdk17-openjdk-slim
+# Use an official OpenJDK runtime image as a base image
+FROM openjdk:17-jdk-alpine
 
-# Create a non-root user and group
-RUN addgroup --system myappgroup && adduser --system myappuser -G myappgroup
+# Create a non-root user
+RUN addgroup -S myappgroup && adduser -S myappuser -G myappgroup
 
 # Set the working directory in the container
-WORKDIR /usr/local/tomcat/webapps
+WORKDIR /app
 
-# Copy the war file from the build stage to the webapps directory of Tomcat
-COPY --from=build /app/target/*.war .
-
-# Expose the port the Tomcat server runs on
-EXPOSE 8080
+# Copy the built application JAR file from the build stage to the container at /app
+COPY --from=build /app/target/*.jar app.jar
 
 # Change the owner of the app directory to the non-root user
-RUN chown myappuser:myappgroup /usr/local/tomcat/webapps -R
+RUN chown myappuser:myappgroup /app -R
+
+# Expose the port the application runs on
+EXPOSE 8080
 
 # Switch to the non-root user
 USER myappuser
 
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# Run the application
+CMD ["java", "-jar", "app.jar"]
