@@ -9,10 +9,8 @@ services:
     command: mvn clean package
 
   app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: sneproject/maven-app
     ports:
-      - "80:80"
+      - "5000:8080"
     depends_on:
       - maven_build
