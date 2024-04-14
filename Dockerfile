@@ -17,7 +17,9 @@ RUN mvn clean package
 FROM tomcat:9.0-jdk17-openjdk-slim
 
 # Create a non-root user and group
+USER root
 RUN addgroup --system myappgroup && adduser --system myappuser -G myappgroup
+USER myappuser
 
 # Set the working directory in the container
 WORKDIR /usr/local/tomcat/webapps
