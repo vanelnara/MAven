@@ -6,10 +6,22 @@ pipeline {
         maven 'maven-path'
     }
     stages {
-        stage('Checkout') {
+        stage('Fetch'code) {
             steps {
                 // Checkout the Git repository
                 checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn install -DskipTests'
+            } 
+
+            post {
+                success {
+                    echo 'Now Archiving it...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
             }
         }
         stage('Build & Unit Test') {
@@ -31,18 +43,6 @@ pipeline {
             }
         }
         
-        stage('Build') {
-            steps {
-                sh 'mvn install -DskipTests'
-            } 
-
-            post {
-                success {
-                    echo 'Now Archiving it...'
-                    archiveArtifacts artifacts: '**/target/*.war'
-                }
-            }
-        }
         stage('Docker Build') {
             steps {
                 sh 'docker-compose build'
