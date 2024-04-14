@@ -23,7 +23,7 @@ RUN groupadd --system myappgroup && useradd --system --gid myappgroup myappuser
 WORKDIR /usr/local/tomcat/webapps
 
 # Copy the war file from the build stage to the webapps directory of Tomcat
-COPY --from=build /app/target/*.war .
+COPY --from=build target/*.war .
 
 # Expose the port the Tomcat server runs on
 EXPOSE 8080
