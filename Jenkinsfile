@@ -6,7 +6,7 @@ pipeline {
         maven 'maven-path'
     }
     stages {
-        stage('Fetch'code) {
+        stage('Fetch code') {
             steps {
                 // Checkout the Git repository
                 checkout scm
