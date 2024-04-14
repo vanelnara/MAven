@@ -61,7 +61,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker pull sneproject/maven-app'
-                sh 'docker run -d -p 5000:8080 --name maven-app sneproject/maven-app'
+                sh 'docker run -d -p 5000:8080 sneproject/maven-app'
             }
         }
     }
