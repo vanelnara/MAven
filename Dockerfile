@@ -16,8 +16,8 @@ RUN mvn clean package
 # Use an official Tomcat image as a base image
 FROM tomcat:9.0.55-jdk8-corretto
 
-# Create a non-root user and group
-RUN groupadd --system myappgroup && useradd --system --gid myappgroup myappuser
+# Create a non-root user and group with explicit IDs
+RUN groupadd -r -g 1001 myappgroup && useradd -r -u 1001 -g myappgroup myappuser
 
 # Set the working directory in the container
 WORKDIR /usr/local/tomcat/webapps
