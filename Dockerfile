@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn clean package
 
 # Use an official Tomcat image as a base image
-FROM tomcat:9.0-jdk17-openjdk-slim
+FROM tomcat:9.0.55-jdk8-corretto
 
 # Create a non-root user and group
 RUN groupadd --system myappgroup && useradd --system --gid myappgroup myappuser
@@ -23,7 +23,7 @@ RUN groupadd --system myappgroup && useradd --system --gid myappgroup myappuser
 WORKDIR /usr/local/tomcat/webapps
 
 # Copy the war file from the build stage to the webapps directory of Tomcat
-COPY --from=build **/target/*.war .
+COPY target/vprofile-v2.war /usr/local/tomcat/webapps/
 
 # Expose the port the Tomcat server runs on
 EXPOSE 8080
