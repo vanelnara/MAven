@@ -45,7 +45,7 @@ pipeline {
         
         stage('Docker Build') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker build --no-cache -t sneproject/maven-app .'
             }
         }
         stage('Docker Push') {
