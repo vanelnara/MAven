@@ -56,12 +56,7 @@ pipeline {
                 '''
             }
         }
-        post {
-           always {
-              junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
-          }
-      }
-
+        
         stage('SonarQube Analysis') {
             steps {
                 // Use the withSonarQubeEnv wrapper to configure SonarQube analysis
@@ -91,6 +86,12 @@ pipeline {
                 sh 'docker pull sneproject/maven-app'
                 sh 'docker run -d -p 5050:8080 sneproject/maven-app'
             }
+        }
+    }
+    
+    post {
+        always {
+            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
         }
     }
 }
