@@ -34,6 +34,11 @@ pipeline {
                 sh 'mvn verify'
             }
         }
+        stage(Dependency-check) {
+            steps {
+                dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'depend-check'
+            }
+        } 
         stage('SonarQube Analysis') {
             steps {
                 // Use the withSonarQubeEnv wrapper to configure SonarQube analysis
