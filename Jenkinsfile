@@ -34,7 +34,7 @@ pipeline {
                 sh 'mvn verify'
             }
         }
-        stage(Dependency-check) {
+        stage('Dependency-check') {
             steps {
                 dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'depend-check'
             }
