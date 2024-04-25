@@ -56,12 +56,11 @@ pipeline {
                 '''
             }
         }
-    
-    post {
-        always {
-            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
-        }
-    }
+        post {
+           always {
+              junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
+          }
+      }
 
         stage('SonarQube Analysis') {
             steps {
