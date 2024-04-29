@@ -34,20 +34,6 @@ pipeline {
                 sh 'mvn verify'
             }
         }
-        stage('Dependency-check') {
-            steps {
-                dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'depend-check'
-            }
-        }
-        
-        stage('SonarQube Analysis') {
-            steps {
-                // Use the withSonarQubeEnv wrapper to configure SonarQube analysis
-                withSonarQubeEnv('sonar-server') {
-                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=vanelnara'
-                }
-            }
-        }
         
         stage('Docker Build') {
             steps {
@@ -70,8 +56,29 @@ pipeline {
                 sh 'docker run -d -p 5050:8080 sneproject/maven-app'
             }
         }
+        stage ("Docker Pull Dastardly from Burp Suite container image") {
+            steps {
+                sh 'docker pull public.ecr.aws/portswigger/dastardly:latest'
+            }
+        }
         
+        stage ("Docker run Dastardly from Burp Suite Scan") {
+            steps {
+                cleanWs()
+                sh '''
+                    docker run --user $(id -u) -v ${WORKSPACE}:${WORKSPACE}:rw \
+                    -e BURP_START_URL=https://ginandjuice.shop/ \
+                    -e BURP_REPORT_FILE_PATH=${WORKSPACE}/dastardly-report.xml \
+                    public.ecr.aws/portswigger/dastardly:latest
+                '''
+            }
+        }
         
+    }
+    post {
+        always {
+            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
+        }
     }
     
 }
