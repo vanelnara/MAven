@@ -54,6 +54,9 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
 
+    - name: Set JAVA_HOME for Dependency Check
+      run: echo "JAVA_HOME=${RUNNER_TOOL_CACHE}/Java_Adopt_jdk/11.0.23-9/x64" >> $GITHUB_ENV
+
     - name: Run OWASP Dependency Check
       run: |
         docker run --name owaspdependencychecklatest_cfa219 \
@@ -68,5 +71,6 @@ jobs:
           -v "/home/runner/work/MAven/MAven":"/github/workspace" \
           owasp/dependency-check:latest \
           --scan /github/workspace --format ALL --project CI
+
 
 
