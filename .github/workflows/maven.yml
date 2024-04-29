@@ -20,7 +20,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '17' # or the version you need
+        java-version: '11' # or the version you need
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -43,4 +43,4 @@ jobs:
       run: docker run --rm -v "$(pwd)/dependency-check-report:/report" owasp/dependency-check --project CI --scan /report --format HTML --output /report/dependency-check-report.html
 
     - name: Print HTML report path
-      run: echo "Dependency Check HTML report: file://$(pwd)/dependency-check-report/dependency-check-report.html"
+      run: echo "Dependency Check HTML report:file://$(pwd)/dependency-check-report/dependency-check-report.html"
