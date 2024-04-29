@@ -20,7 +20,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '17' # or the version you need
+        java-version: '11' # or the version you need
         distribution: 'adopt'
 
     - name: Build with Maven
