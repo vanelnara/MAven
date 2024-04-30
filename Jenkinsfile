@@ -61,7 +61,6 @@ pipeline {
                 sh 'docker pull public.ecr.aws/portswigger/dastardly:latest'
             }
         }
-        
         stage ("Docker run Dastardly from Burp Suite Scan") {
             steps {
                 cleanWs()
@@ -73,12 +72,10 @@ pipeline {
                 '''
             }
         }
-        
     }
     post {
         always {
             junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
         }
     }
-    
 }
