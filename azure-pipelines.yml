@@ -10,7 +10,7 @@ pool:
 
 variables:
   MAVEN_VERSION: '3.8.4'
-  JAVA_VERSION: '11'
+  JAVA_VERSION: '17'
   DOCKER_IMAGE: 'sneproject/maven-app'
   DOCKER_USERNAME: 'sneproject'
   DOCKER_PASSWORD: 'bonjourvanel'
