@@ -6,7 +6,9 @@ trigger:
       - develop
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Agent1  
+  demands:
+  - agent.name -equals self-hosted
 
 variables:
   MAVEN_VERSION: '3.8.4'
