@@ -6,9 +6,7 @@ trigger:
       - develop
 
 pool:
-  name: Default  
-  
-  
+  name: Default  # Make sure this matches the pool name where your self-hosted agent is registered
 
 variables:
   MAVEN_VERSION: '3.8.4'
@@ -36,7 +34,8 @@ stages:
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-          
+              jdkSourceOption: 'PreInstalled'  # Use preinstalled JDK
+            
           - script: |
               mvn install -DskipTests
             displayName: 'Maven Build'
@@ -57,7 +56,8 @@ stages:
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-          
+              jdkSourceOption: 'PreInstalled'  # Use preinstalled JDK
+            
           - script: |
               mvn test
             displayName: 'Run Unit Tests'
@@ -72,7 +72,8 @@ stages:
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-          
+              jdkSourceOption: 'PreInstalled'  # Use preinstalled JDK
+            
           - script: |
               mvn verify
             displayName: 'Run Integration Tests'
