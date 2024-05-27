@@ -6,9 +6,9 @@ trigger:
       - develop
 
 pool:
-  name: Agent1  
+  name: Default  
   demands:
-  - agent.name -equals self-hosted
+  - AgentSelfHosted -equals self-hosted
 
 variables:
   MAVEN_VERSION: '3.8.4'
