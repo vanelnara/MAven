@@ -1,0 +1,115 @@
+trigger:
+  branches:
+    include:
+      - main
+      - master
+      - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  MAVEN_VERSION: '3.8.4'
+  JAVA_VERSION: '11'
+  DOCKER_IMAGE: 'sneproject/maven-app'
+  DOCKER_USERNAME: 'sneproject'
+  DOCKER_PASSWORD: 'bonjourvanel'
+
+stages:
+  - stage: FetchCode
+    displayName: 'Fetch Code'
+    jobs:
+      - job: Checkout
+        displayName: 'Checkout Repository'
+        steps:
+          - checkout: self
+
+  - stage: Build
+    displayName: 'Build and Archive'
+    jobs:
+      - job: Build
+        displayName: 'Build'
+        steps:
+          - task: UseJavaVersion@0
+            inputs:
+              versionSpec: '$(JAVA_VERSION)'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+              jdkDestinationDirectory: '/usr/lib/jvm'
+          
+          - script: |
+              mvn install -DskipTests
+            displayName: 'Maven Build'
+          
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '**/target/*.war'
+              artifact: 'WARFiles'
+            displayName: 'Archive WAR Files'
+  
+  - stage: UnitTest
+    displayName: 'Build & Unit Test'
+    jobs:
+      - job: UnitTest
+        displayName: 'Unit Test'
+        steps:
+          - task: UseJavaVersion@0
+            inputs:
+              versionSpec: '$(JAVA_VERSION)'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+              jdkDestinationDirectory: '/usr/lib/jvm'
+          
+          - script: |
+              mvn test
+            displayName: 'Run Unit Tests'
+
+  - stage: IntegrationTest
+    displayName: 'Integration Test'
+    jobs:
+      - job: IntegrationTest
+        displayName: 'Integration Test'
+        steps:
+          - task: UseJavaVersion@0
+            inputs:
+              versionSpec: '$(JAVA_VERSION)'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+              jdkDestinationDirectory: '/usr/lib/jvm'
+          
+          - script: |
+              mvn verify
+            displayName: 'Run Integration Tests'
+
+  - stage: DockerBuild
+    displayName: 'Docker Build'
+    jobs:
+      - job: DockerBuild
+        displayName: 'Docker Build'
+        steps:
+          - script: |
+              docker build --no-cache -t $(DOCKER_IMAGE) .
+            displayName: 'Build Docker Image'
+
+  - stage: DockerPush
+    displayName: 'Docker Push'
+    jobs:
+      - job: DockerPush
+        displayName: 'Push Docker Image'
+        steps:
+          - script: |
+              echo $(DOCKER_PASSWORD) | docker login -u $(DOCKER_USERNAME) --password-stdin
+              docker push $(DOCKER_IMAGE)
+            displayName: 'Push Docker Image'
+
+  - stage: Deploy
+    displayName: 'Deploy'
+    jobs:
+      - job: Deploy
+        displayName: 'Deploy Application'
+        steps:
+          - script: |
+              docker pull $(DOCKER_IMAGE)
+              docker run -d -p 5050:8080 $(DOCKER_IMAGE)
+            displayName: 'Deploy Docker Container'
+
