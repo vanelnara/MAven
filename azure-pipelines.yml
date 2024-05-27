@@ -30,12 +30,10 @@ stages:
       - job: Build
         displayName: 'Build'
         steps:
-          - task: UseJavaVersion@0
+          - task: JavaToolInstaller@0
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
-              jdkDestinationDirectory: '/usr/lib/jvm'
           
           - script: |
               mvn install -DskipTests
@@ -53,12 +51,10 @@ stages:
       - job: UnitTest
         displayName: 'Unit Test'
         steps:
-          - task: UseJavaVersion@0
+          - task: JavaToolInstaller@0
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
-              jdkDestinationDirectory: '/usr/lib/jvm'
           
           - script: |
               mvn test
@@ -70,12 +66,10 @@ stages:
       - job: IntegrationTest
         displayName: 'Integration Test'
         steps:
-          - task: UseJavaVersion@0
+          - task: JavaToolInstaller@0
             inputs:
               versionSpec: '$(JAVA_VERSION)'
               jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
-              jdkDestinationDirectory: '/usr/lib/jvm'
           
           - script: |
               mvn verify
@@ -112,4 +106,3 @@ stages:
               docker pull $(DOCKER_IMAGE)
               docker run -d -p 5050:8080 $(DOCKER_IMAGE)
             displayName: 'Deploy Docker Container'
-
