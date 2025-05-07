@@ -3,7 +3,7 @@ pipeline {
         label "Agent-ubuntu"
     }
     tools {
-        maven 'Maven-3.8.7'  // Match name in Jenkins global tool config
+        maven 'Maven'  // Match name in Jenkins global tool config
     }
     stages {
         stage('Fetch code') {
