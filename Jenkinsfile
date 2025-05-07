@@ -3,12 +3,11 @@ pipeline {
         label "Agent-ubuntu"
     }
     tools {
-        maven 'maven-path'
+        maven 'Maven-3.8.7'  // Match name in Jenkins global tool config
     }
     stages {
         stage('Fetch code') {
             steps {
-                // Checkout the Git repository
                 checkout scm
             }
         }
