@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "Agent-ubuntu"
+        label "ubuntu-Agent"
     }
     tools {
         maven 'maven'  // Match name in Jenkins global tool config
